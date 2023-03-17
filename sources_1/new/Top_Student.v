@@ -20,6 +20,7 @@ module Top_Student (
     output [7:0] JC
     );
     
+    //mouse instantiation
     reg rst = 0;
     wire[11:0] mouse_xpos, mouse_ypos;
     wire[3:0] mouse_zpos;
@@ -33,34 +34,24 @@ module Top_Student (
     );
     
     //OLED Instantiation
-    wire clk6p25mhz;
-    clk_div clk6p25mHz(clock,7, clk6p25mhz);
+    wire clk6p25m;
+    clk_div slow_clk6p25(clock,7, clk6p25m);
     
     wire [15:0] oled_data;
-    wire frame_begin, sending_pixel, sample_pixel;
+    wire frame_begin, sending_pixels, sample_pixel;
     wire [12:0] pixel_index;
     
-    Oled_Display oled (
-            .clk(clk6p25mhz), 
-            .reset(rst),
-            .frame_begin(frame_begin),
-            .sending_pixels(sending_pixel),
-            .sample_pixel(sample_pixel),
-            .pixel_index(pixel_index),
-            .pixel_data(oled_data),
-            .cs(JC[0]),
-            .sdin(JC[1]),
-            .sclk(JC[3]),
-            .d_cn(JC[4]),
-            .resn(JC[5]),
-            .vccen(JC[6]),
-            .pmoden(JC[7])
-            );
+    Oled_Display oled(
+         .clk(clk6p25m), .reset(rst), .frame_begin(frame_begin), .sending_pixels(sending_pixels),
+         .sample_pixel(sample_pixel), .pixel_index(pixel_index), .pixel_data(oled_data), 
+         .cs(JC[0]), .sdin(JC[1]), .sclk(JC[3]), .d_cn(JC[4]), .resn(JC[5]), .vccen(JC[6]), .pmoden(JC[7])
+       );
             
     wire [6:0] oled_x;
     wire [6:0] oled_y;
     oled_x_y_coord xy(pixel_index, oled_x, oled_y);
     
+    //Student C
     wire [6:0] mouse_x_scale;
     wire [6:0] mouse_y_scale;
     mouse_xy_scale xy_scale(mouse_xpos, mouse_ypos, mouse_x_scale, mouse_y_scale);
@@ -77,6 +68,7 @@ module Top_Student (
     assign led13 = (mouse_new_event)? 1 : 0;
     assign oled_data = is_ftw ? ftw_oled_data : c_indiv_oled_data;
     
+    //Student D
     wire [15:0] d_indiv_oled_data;
     stu_D_indiv_task d_indiv_task(clock, oled_x, oled_y, sw, d_indiv_oled_data);
     assign oled_data = d_indiv_oled_data;     
