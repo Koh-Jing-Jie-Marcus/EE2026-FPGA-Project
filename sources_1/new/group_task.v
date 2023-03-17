@@ -27,6 +27,7 @@ module group_task(
     output reg [15:0] oled_data
     );
     
+    //4E-1
     always @ (posedge clock) begin 
         if ((x >= 57) && (x <= 59) && (y >= 1) && (y <= 59)) 
              begin

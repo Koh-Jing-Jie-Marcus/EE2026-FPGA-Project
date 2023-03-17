@@ -12,13 +12,12 @@
 
 module Top_Student (
     input clock,
-    input [15:0] pixel_data,
     input [15:0] sw,
     
    //For OLED display
     inout PS2Clk, PS2Data,
     output led15, led14, led13,
-    output [7:0] Jc
+    output [7:0] JC
     );
     
     reg rst = 0;
@@ -49,13 +48,13 @@ module Top_Student (
             .sample_pixel(sample_pixel),
             .pixel_index(pixel_index),
             .pixel_data(oled_data),
-            .cs(Jc[0]),
-            .sdin(Jc[1]),
-            .sclk(Jc[3]),
-            .d_cn(Jc[4]),
-            .resn(Jc[5]),
-            .vccen(Jc[6]),
-            .pmoden(Jc[7])
+            .cs(JC[0]),
+            .sdin(JC[1]),
+            .sclk(JC[3]),
+            .d_cn(JC[4]),
+            .resn(JC[5]),
+            .vccen(JC[6]),
+            .pmoden(JC[7])
             );
             
     wire [6:0] oled_x;
