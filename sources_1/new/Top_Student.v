@@ -13,12 +13,55 @@
 module Top_Student (
     input clock,
     input [15:0] sw,
+    input btnC,
+    
+    //7-segment display
+    output [3:0] an,
+    output [6:0] seg,
+    output dp,
+    
+    output [3:0] JB,
     
    //For OLED display
     inout PS2Clk, PS2Data,
     output led15, led14, led13,
     output [7:0] JC
     );
+    
+    //audio out
+    //clocks for audio out
+    wire clk20k;
+    wire clk50M;
+    wire clk200;
+    wire clk400;
+    
+    //period = 50M / freq
+    clock_freq clock_20kHz(clock, 2_500, clk20k);
+    clock_freq clock_50MHz(clock, 1, clk50M);
+    clock_freq clock_200Hz(clock, 250_000, clk200);
+    clock_freq clock_400Hz(clock, 125_000, clk400);
+    
+    //group task audio
+    //replace sw[15] and valid_number with signal from oled
+    wire valid;
+    reg [3:0] valid_number = 5;
+    button_sensor test_valid(clock, sw[15], valid);
+    
+    seven_seg_display seven_seg_display(clk20k, valid, valid_number, an, seg, dp);
+    
+    //audio out stuff
+    wire [11:0] audio_out;
+    
+    audio_logic audio_main(clock, clk200, clk400, btnC, sw[0], valid, valid_number, audio_out);
+        
+    Audio_Output speaker(
+    .CLK(clk50M), .START(clk20k), .DATA1(audio_out), .RST(0),
+    .D1(JB[1]), .D2(JB[2]), .CLK_OUT(JB[3]), .nSYNC(JB[0])
+    );
+    
+    
+    
+    
     
     //mouse instantiation
     reg rst = 0;
