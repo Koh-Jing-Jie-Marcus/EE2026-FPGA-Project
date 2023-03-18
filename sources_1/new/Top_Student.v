@@ -24,7 +24,7 @@ module Top_Student (
     
    //For OLED display
     inout PS2Clk, PS2Data,
-    output led15, led14, led13,
+    output [15:0] led,
     output [7:0] JC
     );
     
@@ -106,9 +106,9 @@ module Top_Student (
     assign is_ftw = sw[9];
     
     //assignment
-    assign led15 = (mouse_left_click)? 1 : 0;
-    assign led14 = (mouse_middle_click)? 1 : 0;
-    assign led13 = (mouse_new_event)? 1 : 0;
+    assign led[15] = (mouse_left_click)? 1 : 0;
+    assign led[14] = (mouse_middle_click)? 1 : 0;
+    assign led[13] = (mouse_new_event)? 1 : 0;
     assign oled_data = is_ftw ? ftw_oled_data : c_indiv_oled_data;
     
     //Student D
