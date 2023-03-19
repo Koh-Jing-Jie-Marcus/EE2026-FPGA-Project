@@ -49,7 +49,7 @@ module Top_Student (
     //audio out stuff
     wire [11:0] audio_out;
     
-    //audio_logic audio_main(clock, clk200, clk400, btnC, sw[0], valid, valid_number, audio_out);
+    audio_logic audio_main(clock, clk200, clk400, btnC, sw, valid, valid_number, audio_out);
         
     Audio_Output speaker(
     .CLK(clk50M), .START(clk20k), .DATA1(audio_out), .RST(0),
