@@ -1,7 +1,7 @@
 module audio_input_task (
     output reg [8:0] led = 9'b000000000,
     output reg [1:0] an0 = 1,
-    output reg [6:0] seg = 7'b1111111
+    output reg [3:0] audio_input_number
     );
 
     reg [31:0] count = 32'b00000000000000000000000000000000;
@@ -26,7 +26,7 @@ module audio_input_task (
             begin
                 //update LEDs & 7 segment display
                 led <= LED;
-                seg <= SEG;
+                audio_input_number <= volume_level;
                 an0 <= AN0;
                 //reset count to zero
                 count <= 32'b00000000000000000000000000000000;
