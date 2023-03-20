@@ -24,6 +24,7 @@ module group_task(
     input clock,
     input [6:0] x, y, mouse_x_scale, mouse_y_scale,
     input [15:0] sw,
+    input [6:0] clicked,
     output reg [15:0] oled_data
     );
     
@@ -41,6 +42,27 @@ module group_task(
                  begin
                       oled_data <= (sw[0]) ? 16'b00000_000000_00000 : 16'b00000_111111_00000;
                  end
+            else if ((clicked[0] == 1) && (x > 16) && (x < 42) && (y >= 11) && (y <= 13)) begin
+                   oled_data <= 16'b11111_111111_11111;          
+             end
+             else if ((clicked[1] == 1) && (x >= 40) && (x <= 42) && (y > 11) && (y < 31)) begin
+                 oled_data <= 16'b11111_111111_11111;
+             end
+             else if ((clicked[2] == 1) && (x >= 40) && (x <= 42) && (y > 29) && (y < 48)) begin
+                 oled_data <= 16'b11111_111111_11111;
+             end
+             else if ((clicked[3] == 1) && (x > 16) && (x < 42) && (y >= 46) && (y <= 48)) begin
+                 oled_data <= 16'b11111_111111_11111;
+             end
+             else if ((clicked[4] == 1) && (x >= 16) && (x <= 18) && (y > 29) && (y < 48)) begin
+                 oled_data <= 16'b11111_111111_11111;
+             end
+             else if ((clicked[5] == 1) && (x >= 16) && (x <= 18) && (y > 11) && (y < 31)) begin
+                 oled_data <= 16'b11111_111111_11111;
+             end
+             else if ((clicked[6] == 1) && (x > 16) && (x < 42) && (y >= 29) && (y <= 31)) begin
+                 oled_data <= 16'b11111_111111_11111;
+             end
             else if ((x >= 16) && (x <= 42) && (y == 11))  
                  begin
                       oled_data <= 16'b11111_111111_11111;
