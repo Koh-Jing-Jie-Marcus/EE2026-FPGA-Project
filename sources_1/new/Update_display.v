@@ -1,7 +1,7 @@
 module Update_display (
     input [3:0] volume_level,
     output reg [8:0] led = 9'b000000000,
-    output reg [1:0] an0 = 1,
+    output reg an0 = 1,
     output reg [6:0] seg = 7'b1111111
     );
     always @ (*)
