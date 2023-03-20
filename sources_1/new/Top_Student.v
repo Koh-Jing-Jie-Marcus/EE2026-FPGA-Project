@@ -22,6 +22,9 @@ module Top_Student (
     
     output [3:0] JB,
     
+    //For audio input
+    input [3:0] JA,
+    
    //For OLED display
     inout PS2Clk, PS2Data,
     output [15:0] led,
@@ -41,6 +44,27 @@ module Top_Student (
     clock_freq clock_200Hz(clock, 250_000, clk200);
     clock_freq clock_400Hz(clock, 125_000, clk400);
        
+
+    //audio input
+    wire [11:0] MIC_in;
+    reg [8:0] LED;
+    wire [3:0] audio_input_number;
+    reg [1:0] AN0;
+    wire J_MIC_Pin3 = JA[0];
+    wire J_MIC_Pin1 = JA[2];
+    wire J_MIC_Pin4 = JA[3];
+    
+    Audio_Input unit_Audio (
+        .CLK(clock), // 100MHz clock
+        .cs(clk20k), // sampling clock, 20kHz
+        .MISO(J_MIC_Pin3), // J_MIC3_Pin3, serial mic input
+        .clk_samp(J_MIC_Pin1), // J_MIC3_Pin1
+        .sclk(J_MIC_Pin4), // J_MIC3_Pin4, MIC3 serial clock
+        .sample(MIC_in) // 12-bit audio sample data
+        );
+        
+    audio_input_task(LED, AN0, audio_input_number);
+    
     wire isValid;
     wire [3:0] valid_number;
     //audio in
@@ -108,12 +132,12 @@ module Top_Student (
     stu_D_indiv_task d_indiv_task(clock, oled_x, oled_y, sw, d_indiv_oled_data);
     
     wire[15:0] group_task_oled_data;
-    wire [6:0] clicked;
-    group_task task_group(clock, oled_x, oled_y, mouse_x_scale, mouse_y_scale, sw, clicked, group_task_oled_data);   
+
+    group_task task_group(clock, oled_x, oled_y, mouse_x_scale, mouse_y_scale, sw, clicked, group_task_oled_data);  
      
-   
+    wire [6:0] clicked;
     group_mouse_click group_task_click(
-    clock, mouse_left_click, mouse_right_click, mouse_x_scale, mouse_y_scale, valid,
+    clock, mouse_left_click, mouse_right_click, mouse_x_scale, mouse_y_scale, sw[15],
     clicked, isValid, valid_number);
     seven_seg_display seven_seg_display(clk20k, isValid, valid_number, audio_in_number, an, seg, dp);
     
@@ -129,6 +153,7 @@ module Top_Student (
     assign led[15] = is_c_task ? ((mouse_left_click)? 1 : 0) : (is_group_task && sw[15]) ? isValid : 0;
     assign led[14] = (mouse_middle_click)? 1 : 0;
     assign led[13] = (mouse_right_click)? 1 : 0;
+    assign led[8:0] = LED;
     
     assign oled_data = is_group_task ? group_task_oled_data : (is_c_task ? c_indiv_oled_data : is_d_task ? d_indiv_oled_data :(is_ftw ? ftw_oled_data : 0));
         
