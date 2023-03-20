@@ -23,10 +23,7 @@ module Top_Student (
     output [3:0] JB,
     
     //For audio input
-    input CLOCK,
-    input J_MIC_Pin3,
-    output J_MIC_Pin1,
-    output J_MIC_Pin4,
+    input [3:0] JA,
     
    //For OLED display
     inout PS2Clk, PS2Data,
@@ -47,15 +44,18 @@ module Top_Student (
     clock_freq clock_200Hz(clock, 250_000, clk200);
     clock_freq clock_400Hz(clock, 125_000, clk400);
        
+
     //audio input
-  
     wire [11:0] MIC_in;
     reg [8:0] LED;
     wire [3:0] audio_input_number;
     reg [1:0] AN0;
+    wire J_MIC_Pin3 = JA[0];
+    wire J_MIC_Pin1 = JA[2];
+    wire J_MIC_Pin4 = JA[3];
     
     Audio_Input unit_Audio (
-        .CLK(CLOCK), // 100MHz clock
+        .CLK(clock), // 100MHz clock
         .cs(clk20k), // sampling clock, 20kHz
         .MISO(J_MIC_Pin3), // J_MIC3_Pin3, serial mic input
         .clk_samp(J_MIC_Pin1), // J_MIC3_Pin1
@@ -132,7 +132,8 @@ module Top_Student (
     stu_D_indiv_task d_indiv_task(clock, oled_x, oled_y, sw, d_indiv_oled_data);
     
     wire[15:0] group_task_oled_data;
-    group_task task_group(clock, oled_x, oled_y, mouse_x_scale, mouse_y_scale, sw, group_task_oled_data);   
+
+    group_task task_group(clock, oled_x, oled_y, mouse_x_scale, mouse_y_scale, sw, clicked, group_task_oled_data);  
      
     wire [6:0] clicked;
     group_mouse_click group_task_click(
