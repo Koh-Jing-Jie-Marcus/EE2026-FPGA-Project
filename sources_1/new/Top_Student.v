@@ -108,11 +108,12 @@ module Top_Student (
     stu_D_indiv_task d_indiv_task(clock, oled_x, oled_y, sw, d_indiv_oled_data);
     
     wire[15:0] group_task_oled_data;
-    group_task task_group(clock, oled_x, oled_y, mouse_x_scale, mouse_y_scale, sw, group_task_oled_data);   
-     
     wire [6:0] clicked;
+    group_task task_group(clock, oled_x, oled_y, mouse_x_scale, mouse_y_scale, sw, clicked, group_task_oled_data);   
+     
+   
     group_mouse_click group_task_click(
-    clock, mouse_left_click, mouse_right_click, mouse_x_scale, mouse_y_scale, sw[15],
+    clock, mouse_left_click, mouse_right_click, mouse_x_scale, mouse_y_scale, valid,
     clicked, isValid, valid_number);
     seven_seg_display seven_seg_display(clk20k, isValid, valid_number, audio_in_number, an, seg, dp);
     
