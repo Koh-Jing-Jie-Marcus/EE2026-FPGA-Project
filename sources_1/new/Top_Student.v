@@ -43,6 +43,9 @@ module Top_Student (
        
     wire isValid;
     wire [3:0] valid_number;
+    //audio in
+    wire [3:0] audio_in_number;
+    
     //group task audio
     //replace sw[15] and valid_number with signal from oled
     wire valid;
@@ -112,7 +115,7 @@ module Top_Student (
     group_mouse_click group_task_click(
     clock, mouse_left_click, mouse_right_click, mouse_x_scale, mouse_y_scale, valid,
     clicked, isValid, valid_number);
-    seven_seg_display seven_seg_display(clk20k, isValid, valid_number, an, seg, dp);
+    seven_seg_display seven_seg_display(clk20k, isValid, valid_number, audio_in_number, an, seg, dp);
     
     wire is_ftw;
     assign is_ftw = sw[11];
