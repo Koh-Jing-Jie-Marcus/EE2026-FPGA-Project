@@ -40,7 +40,9 @@ module Top_Student (
     clock_freq clock_50MHz(clock, 1, clk50M);
     clock_freq clock_200Hz(clock, 250_000, clk200);
     clock_freq clock_400Hz(clock, 125_000, clk400);
-    
+       
+    wire isValid;
+    wire [3:0] valid_number;
     //group task audio
     //replace sw[15] and valid_number with signal from oled
     wire valid;
@@ -49,7 +51,7 @@ module Top_Student (
     //audio out stuff
     wire [11:0] audio_out;
     
-    audio_logic audio_main(clock, clk200, clk400, btnC, sw, valid, valid_number, audio_out);
+    audio_logic audio_main(clock, clk200, clk400, btnC, sw, isValid, valid_number, audio_out);
         
     Audio_Output speaker(
     .CLK(clk50M), .START(clk20k), .DATA1(audio_out), .RST(0),
@@ -104,14 +106,12 @@ module Top_Student (
     
     wire[15:0] group_task_oled_data;
     group_task task_group(clock, oled_x, oled_y, mouse_x_scale, mouse_y_scale, sw, group_task_oled_data);   
-        
-    wire isValid;
-    wire [3:0] valid_number;
+     
     wire [6:0] clicked;
     group_mouse_click group_task_click(
-    clock, mouse_left_click, mouse_right_click, mouse_x_scale, mouse_y_scale,
+    clock, mouse_left_click, mouse_right_click, mouse_x_scale, mouse_y_scale, sw[15],
     clicked, isValid, valid_number);
-    seven_seg_display seven_seg_display(clk20k, valid, isValid, valid_number, an, seg, dp);
+    seven_seg_display seven_seg_display(clk20k, isValid, valid_number, an, seg, dp);
     
     wire is_ftw;
     assign is_ftw = sw[11];
