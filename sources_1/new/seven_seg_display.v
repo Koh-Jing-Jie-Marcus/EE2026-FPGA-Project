@@ -22,7 +22,6 @@
 
 module seven_seg_display(
     input clock,
-    input valid,
     input isValid,
     input [3:0] valid_number,
     output reg [3:0] an,
@@ -48,7 +47,7 @@ module seven_seg_display(
     always @ (posedge clock) begin
             an_to_display <= ~an_to_display;
             seg <= digit_signal;
-            an <= (valid == 1 && isValid == 1) ? (an_to_display == left_digit) ? ~4'b1000 : ~4'b0100 : ~4'b0000;
+            an <= (isValid == 1) ? (an_to_display == left_digit) ? ~4'b1000 : ~4'b0100 : ~4'b0000;
             dp <= (an_to_display == left_digit) ? ~1 : ~0;
     end 
     

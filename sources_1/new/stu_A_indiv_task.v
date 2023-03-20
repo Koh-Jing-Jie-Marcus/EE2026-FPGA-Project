@@ -124,7 +124,7 @@ module Update_display (
     end
 endmodule
 
-module Top_Student (
+module Student_a (
     input CLOCK,
     input J_MIC_Pin3,
     output J_MIC_Pin1,
